@@ -1,9 +1,0 @@
-{
-    "name": "iristeski/php",
-    "require": {},
-    "autoload": {
-        "psr-4": {
-            "Tracker\\": "Tracker/"
-        }
-    }
-}
