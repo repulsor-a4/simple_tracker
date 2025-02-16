@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <title>Page 3</title>
+  </head>
+  <body>
+    <header>Header</header>
+    <main>Main</main>
+    <footer>Footer</footer>
+  </body>
+
+  <script type="text/javascript">
+    var siteCode = "QWERTZ";
+    var trackingPage="homepage";
+
+    var scriptElement = document.createElement("script");
+    scriptElement.src = "http://localhost:8080/tracking?siteCode=" + siteCode;
+    document.head.appendChild(scriptElement);
+  </script>
+
+</html>
