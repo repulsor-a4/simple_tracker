@@ -29,9 +29,9 @@ class Tracker
         $cookie_val = urlencode( json_encode($cookie_value) );
         
         // if no cookies are being set, then set the first cookie and create a unique visitor
-        if ( $this->cookie->getCookie(cookify($website['website_url'])) === false  )
-        {
+        if ( $this->cookie->getCookie(cookify($website['website_url'])) === false  ) {
             $this->cookie->setCookie($website['website_url'], $cookie_val, $cookie_value['duration']);
+
             return true;
         }
 
@@ -55,16 +55,14 @@ class Tracker
             $diff = $search_params_timestamp - $db_search_last_timestamp;
 
             // do not create a unique visitor if the page has been accessed in the previous 5 mins
-            if ( $diff <= 300 )
-            {
+            if ( $diff <= 300 ) {
                 return false;
             }
+        }
 
-            // create a unique visitor if there is a change in the cookie content
-            if( urlencode($this->cookie->getCookie(cookify($website['website_url']))) !== $cookie_val )
-            {
-                return true;
-            }
+        // if cookie value is different from the previous cookie value create a unique visitor
+        if ( urlencode($this->cookie->getCookie(cookify($website['website_url']))) !== $cookie_val ) {
+            return true;
         }
 
         return false;
