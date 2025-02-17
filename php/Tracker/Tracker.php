@@ -27,14 +27,15 @@ class Tracker
             'duration' => time() + 300
         ];
         $cookie_val = urlencode( json_encode($cookie_value) );
-
+        
         // if no cookies are being set, then set the first cookie and create a unique visitor
-        if ( $this->cookie->getCookie(cookify($website['website_url'])) === false  ) {
-            $this->cookie->setCookie($website['website_url'], $cookie_val, time() + 300);
+        if ( $this->cookie->getCookie(cookify($website['website_url'])) === false  )
+        {
+            $this->cookie->setCookie($website['website_url'], $cookie_val, $cookie_value['duration']);
             return true;
         }
 
-        $cookie_timestamp = json_decode( $this->cookie->getCookie(cookify($website['website_url'])), true )['duration'];
+        $cookie_json = json_decode( $this->cookie->getCookie(cookify($website['website_url'])), true );
 
         $search_params = [
             'website_id' => $website['id'],
@@ -45,23 +46,25 @@ class Tracker
         'SELECT * FROM visitors WHERE website_id = :website_id
                 AND page_name = :page_name ORDER BY timestamp DESC', $search_params
             )->fetch();
-        
-        $db_search_last_timestamp = isset($db_search['timestamp']) ? strtotime($db_search['timestamp']): time();
-        $search_params_timestamp = $cookie_timestamp;
 
-        $diff = $search_params_timestamp - $db_search_last_timestamp;
+        if(!empty($db_search))
+        {
+            $db_search_last_timestamp = strtotime($db_search['timestamp']);
+            $search_params_timestamp = $cookie_json['duration'];
 
-        // if cookie value is different from the previous cookie value
-        // do another check: whether there are entries in visitors tbl older than 5 mins.
-        // otherwise create a unique visitor
-        if ( $this->cookie->getCookie(cookify($website['website_url'])) !== $cookie_val ) {
+            $diff = $search_params_timestamp - $db_search_last_timestamp;
 
             // do not create a unique visitor if the page has been accessed in the previous 5 mins
-            if (!empty($db_search) && $diff < 300) {
+            if ( $diff <= 300 )
+            {
                 return false;
             }
 
-            return true;
+            // create a unique visitor if there is a change in the cookie content
+            if( urlencode($this->cookie->getCookie(cookify($website['website_url']))) !== $cookie_val )
+            {
+                return true;
+            }
         }
 
         return false;
