@@ -23,5 +23,5 @@ cd into site3.com folder and run: php -S localhost:8083
 
 Step 6:
 navigate to http://localhost:8081/index.php in your browser to register a unique hit to page1.com
-navigate to http://localhost:8082/index.php in your browser to register a unique hit to page2.com
-navigate to http://localhost:8083/index.php in your browser to register a unique hit to page3.com
+navigate to http://localhost:8082/index.html in your browser to register a unique hit to page2.com
+navigate to http://localhost:8083/index.html in your browser to register a unique hit to page3.com
